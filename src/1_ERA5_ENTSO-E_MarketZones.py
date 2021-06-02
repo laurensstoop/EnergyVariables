@@ -40,17 +40,18 @@ years = np.array([
             # '1979', '1980', '1981',
             # '1982', '1983', '1984',
             # '1985', '1986', '1987',
-            # '1988', '1989', '1990',
-            # '1991', '1992', '1993',
-            # '1994', '1995', '1996',
-            # '1997', '1998', '1999',
-            '2000', '2001', '2002',
-            '2003', '2004', '2005',
-            '2006', '2007', '2008',
-            '2009', '2010', '2011',
-            '2012', '2013', '2014',
-            '2015', '2016', '2017',
-            '2018', '2019', '2020'            
+            # '1988', '1989', 
+            '1990',
+            '1991', '1992', '1993',
+            '1994', '1995', '1996',
+            '1997', '1998', '1999',
+            # '2000', '2001', '2002',
+            # '2003', '2004', '2005',
+            # '2006', '2007', '2008',
+            # '2009', '2010', '2011',
+            # '2012', '2013', '2014',
+            # '2015', '2016', '2017',
+            # '2018', '2019', '2020'            
         ])
 
 
@@ -60,7 +61,7 @@ PATH_TO_NUTS0 = '/media/DataStager1/Other/RegionDefinitions/ENTSO-E_StudyZones/D
 
 # Read NetCDF
 FOLDER_WITH_NETCDF = '/media/DataStager2/ERA5-EU_CF/'
-FOLDER_STORE = '/media/DataStager2/ERA5-EU_CF/NUTS0/'
+FOLDER_STORE = '/media/DataStager2/ERA5-EU_CF/MarketZones/'
 
 
 print('NOTIFY: Initialization is complete, Skynet active')
@@ -117,9 +118,9 @@ nuts0 = nuts0.dropna()
 for year in years:
 
     # Define the file name
-    file_save_solar = FOLDER_STORE+'ERA5-EU_CF-NUTS0_solar_'+str(year)+'.nc'
-    file_save_windoff = FOLDER_STORE+'ERA5-EU_CF-NUTS0_windoff_'+str(year)+'.nc'
-    file_save_windon = FOLDER_STORE+'ERA5-EU_CF-NUTS0_windon_'+str(year)+'.nc'
+    file_save_solar = FOLDER_STORE+'ERA5-EU_CF-MarketZones_solar_'+str(year)+'.nc'
+    file_save_windoff = FOLDER_STORE+'ERA5-EU_CF-MarketZones_windoff_'+str(year)+'.nc'
+    file_save_windon = FOLDER_STORE+'ERA5-EU_CF-MarketZones_windon_'+str(year)+'.nc'
     
     
     # Check if file allready exist, then get out
