@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Restructered on Sun 30 May 2021 17:04
+Restructered on Sun 26 Jan 2022 17:04
 
 @author: Laurens Stoop - l.p.stoop@uu.nl
 
@@ -60,8 +60,8 @@ PATH_TO_NUTS0 = '/media/DataStager1/Other/RegionDefinitions/ENTSO-E_StudyZones/D
 # PATH_TO_NUTS1 = '/media/DataStager1/Other/RegionDefinitions/ENTSO-E_StudyZones/DTU-PECD22-Polygons_VF2021.shp'
 
 # Read NetCDF
-FOLDER_WITH_NETCDF = '/media/DataStager2/ERA5-EU_CF/'
-FOLDER_STORE = '/media/DataStager2/ERA5-EU_CF/MarketZones/'
+FOLDER_WITH_NETCDF = '/media/DataStager2/ERA5_CF/'
+FOLDER_STORE = '/media/DataStager2/ERA5_EV/'
 
 
 print('NOTIFY: Initialization is complete, Skynet active')
