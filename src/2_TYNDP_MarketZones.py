@@ -186,7 +186,7 @@ for year in years:
             if country_cap_distr_windoff.size == 0 or country_cap_distr_windoff == 0:
                 print('There is no offshore capacity for '+country)
         
-            # Fix the small easternly Danish region
+            # Fix the small easternly German region
             elif country == 'DEKF':
                 ds_ev_windoff[country] = country_cap_distr_windoff * ds_cf_windoff['DE00_OFF']
         

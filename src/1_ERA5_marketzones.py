@@ -42,16 +42,16 @@ years = np.array([
             # '1985', '1986', '1987',
             # '1988', '1989', 
             # '1990',
-            '1991', '1992', '1993',
-            '1994', '1995', '1996',
-            '1997', '1998', '1999',
-            '2000', '2001', '2002',
-            '2003', '2004', '2005',
-            '2006', '2007', '2008',
-            '2009', '2010', '2011',
-            '2012', '2013', '2014',
-            '2015', '2016', '2017',
-            '2018', '2019', 
+            # '1991', '1992', '1993',
+            # '1994', '1995', '1996',
+            # '1997', '1998', '1999',
+            # '2000', '2001', '2002',
+            # '2003', '2004', '2005',
+            # '2006', '2007', '2008',
+            # '2009', '2010', '2011',
+            # '2012', '2013', '2014',
+            # '2015', '2016', '2017',
+            # '2018', '2019', 
             '2020'            
         ])
 
@@ -65,7 +65,8 @@ PATH_TO_NUTS0 = '/media/DataStager1/Other/RegionDefinitions/ENTSO-E_StudyZones/D
 # Read NetCDF
 # FOLDER_WITH_NETCDF = '/media/DataStager1/ERA5_CF/'
 FOLDER_WITH_NETCDF = '/media/DataGate2/ERA5/CF/'
-FOLDER_STORE = '/media/DataStager2/ERA5_EV/'
+# FOLDER_STORE = '/media/DataStager2/ERA5_EV/'
+FOLDER_STORE = '/media/DataGate2/ERA5/CF_MZ/'
 
 
 # open teh mean file
@@ -112,7 +113,7 @@ for NC in not_considered_nuts0:
 nuts0 = nuts0.dropna()
 
 
-# There is an empty LY00 zone in there 
+# # There is an empty LY00 zone in there 
 # nuts1.iloc[246]
 # nuts1 = nuts1.drop(index=246)
 
@@ -131,7 +132,7 @@ for year in years:
     # for month in ['01']: #, '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']:
    
     # Define the file name
-    file_save = FOLDER_STORE+'ERA5_EV_RM_'+year+'.nc'
+    file_save = FOLDER_STORE+'ERA5_CF_MZ_RM_'+year+'.nc'
     
     # # Define the file name
     # file_save_solar = FOLDER_STORE+'ERA5_EV_mz_20_solar_'+year+month+'.nc'
@@ -176,12 +177,11 @@ for year in years:
         
         # CALCULATE MASK
         SZ0_mask_poly = regionmask.Regions(name = 'ENTSO-E_StudyZone0_Mask', numbers = np.arange(0,len(nuts0)), abbrevs = list(nuts0['Study Zone']), outlines = list(nuts0.geometry.values[i] for i in np.arange(0,len(nuts0)))) # names = list(nuts0['Study Zone']),
-        # SZ1_mask_poly = regionmask.Regions(name = 'ENTSO-E_StudyZone1_Mask', numbers = list(range(0,262)), abbrevs = list(nuts1['Code']), outlines = list(nuts1.geometry.values[i] for i in range(0,262))) # names = list(nuts1['Study Zone']),
-        # print(nuts_mask_poly)
+        # SZ1_mask_poly = regionmask.Regions(name = 'ENTSO-E_StudyZone1_Mask', numbers = np.arange(0,len(nuts1)), abbrevs = list(nuts1['Code']), outlines = list(nuts1.geometry.values[i] for i in np.arange(0,len(nuts0)))) # names = list(nuts1['Study Zone']),        # print(nuts_mask_poly)
         
         # Create the mask
         mask = SZ0_mask_poly.mask(ds.isel(time = 0), method = None)
-        # mask = SZ0_mask_poly.mask(ds.isel(time = 0), method = None)
+        # mask = SZ1_mask_poly.mask(ds.isel(time = 0), method = None)
         # mask # To check the contents of the mask defined
         
         
@@ -207,11 +207,12 @@ for year in years:
         
         # Select a region (the Netherlands is 12/54 in NUTS0)
         for ID_REGION in np.arange(0,len(nuts0)):
+        # for ID_REGION in np.arange(0,len(nuts1)):
         # for ID_REGION in [7, 36, 48, 49, 50, 92, 95, 97, 99, 100]: # the interesting countries
             
             # Determine the region name
             region_name = nuts0.iloc[ID_REGION]['Study Zone']
-
+            
             print('      : ('+str(ID_REGION+1)+'/112) '+region_name+'!')
             
             # Select the lat/lon combo's as vector to use later
@@ -337,7 +338,7 @@ for year in years:
         
         # Saving the file
         ds_save.to_netcdf(file_save, encoding={'time':{'units':'days since 1900-01-01'}})
-        dsw_save.to_netcdf(FOLDER_STORE+'ERA5_EV_WM_'+year+'.nc', encoding={'time':{'units':'days since 1900-01-01'}})
+        dsw_save.to_netcdf(FOLDER_STORE+'ERA5_CF_MZ_WM_'+year+'.nc', encoding={'time':{'units':'days since 1900-01-01'}})
         
         
         # # Setting the general dataset attributes
