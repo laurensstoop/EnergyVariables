@@ -250,6 +250,17 @@ for year in years:
             WON.append(out_sel.windCF_on.groupby('time').mean(...).values)
             SPV.append(out_sel.solarCF.groupby('time').mean(...).values)
             
+            #
+            
+            
+            
+            
+            
+            
+            
+            
+            # REDO THIS BIT as now 3x weighted meand
+            
             
             # Weighted mean
             out_sel_of = out_sel.weighted(weights_of)
