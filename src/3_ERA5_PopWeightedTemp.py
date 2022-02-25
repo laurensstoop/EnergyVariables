@@ -20,8 +20,6 @@ import numpy as np
 import regionmask
 import geopandas as gpd
 import datetime
-import pandas as pd
-import matplotlib.pyplot as plt
 import os.path
 
 
@@ -37,22 +35,22 @@ years = np.array([
             '1971', '1972', '1973',
             '1974', '1975', '1976',
             '1977', '1978',
-            # '1979', '1980', '1981',
-            # '1982', '1983', '1984',
-            # '1985', '1986', '1987',
-            # '1988', '1989', 
-            # '1990',
-            # '1991', '1992', '1993',
-            # '1994', '1995', '1996',
-            # '1997', '1998', '1999',
-            # '2000', '2001', '2002',
-            # '2003', '2004', '2005',
-            # '2006', '2007', '2008',
-            # '2009', '2010', '2011',
-            # '2012', '2013', '2014',
-            # '2015', '2016', '2017',
-            # '2018', '2019', 
-            # '2020'            
+            '1979', '1980', '1981',
+            '1982', '1983', '1984',
+            '1985', '1986', '1987',
+            '1988', '1989', 
+            '1990',
+            '1991', '1992', '1993',
+            '1994', '1995', '1996',
+            '1997', '1998', '1999',
+            '2000', '2001', '2002',
+            '2003', '2004', '2005',
+            '2006', '2007', '2008',
+            '2009', '2010', '2011',
+            '2012', '2013', '2014',
+            '2015', '2016', '2017',
+            '2018', '2019', 
+            '2020'            
         ])
 
 
@@ -216,21 +214,30 @@ for year in years:
                     # This is the fancy loop by Matteo that uses the compute dask function to load and slice the data
                     out_sel = ds.sel(lat = slice(id_lat[0], id_lat[-1]), lon = slice(id_lon[0], id_lon[-1])).compute().where(mask == ID_REGION)
                    
-                    
-                  
-                            
-                
-                    #%%
-                    # =============================================================================
-                    # Regional mean for saving data
-                    # =============================================================================
-        
                     # Weighted mean
                     out_sel_of = out_sel.weighted(weights_pop)
                     PWT.append(out_sel_of.mean(("lat","lon")).t2m.values)
                                         
                     # Just a list of names
                     REGION_NAME.append(region_name)
+                    
+                # also fix Malta                    
+                elif region_name == 'MT00_OFF':
+                    # Select the lat/lon combo's as vector to use later
+                    lat = mask.lat.values
+                    lon = mask.lon.values
+                    # We select the region under consideration
+                    sel_mask = mask.where(mask == ID_REGION).values
+                    # Select the specific lat/lon combo that is the minimum bounding box
+                    id_lon = lon[np.where(~np.all(np.isnan(sel_mask), axis=0))]
+                    id_lat = lat[np.where(~np.all(np.isnan(sel_mask), axis=1))]
+                    # This is the fancy loop by Matteo that uses the compute dask function to load and slice the data
+                    out_sel = ds.sel(lat = slice(id_lat[0], id_lat[-1]), lon = slice(id_lon[0], id_lon[-1])).compute().where(mask == ID_REGION)
+                    # Weighted mean
+                    out_sel_of = out_sel.weighted(weights_pop)
+                    PWT.append(out_sel_of.mean(("lat","lon")).t2m.values)
+                    # Just a list of names
+                    REGION_NAME.append('MT00')
             
             
             # out of the region loop we create new arrays with the info
