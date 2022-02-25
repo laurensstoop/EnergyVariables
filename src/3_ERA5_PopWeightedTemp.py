@@ -63,7 +63,7 @@ PATH_TO_NUTS0 = '/media/DataStager1/Other/RegionDefinitions/ENTSO-E_StudyZones/D
 # Read NetCDF
 # FOLDER_WITH_NETCDF = '/media/DataGate2/ERA5/BASE2/'
 FOLDER_WITH_NETCDF = '/media/DataStager2/ERA5_BASE2_t2m/'
-FOLDER_STORE = '/media/DataStager2/ERA5_LoadModel/'
+FOLDER_STORE = '/media/DataStager2/ERA5_PWT/'
 
 
 # =============================================================================

@@ -17,7 +17,7 @@ Remade on 25 feb 2022
 import xarray as xr 
 import numpy as np
 import pandas as pd
-
+import datetime
 import matplotlib.pyplot as plt
 
 
@@ -69,27 +69,53 @@ print('NOTIFY: Initialization is complete, Skynet active')
 scenario_capacity = 'DE_2030'
 region_name = 'EL00'
 
-   
-
+for scenario_capacity in TYNDP_scenarios_capacity: 
+    # open data
+    dsd = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_'+scenario_capacity+'.nc')
+    dst = xr.open_mfdataset(FOLDER_STORE+'ERA5_PWT_*.nc' )
     
-# open data
-dsd = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_'+scenario_capacity+'.nc')
-dst = xr.open_mfdataset(FOLDER_STORE+'ERA5_PWT_*.nc' )
+    # make sure to only use similair time period
+    dst = dst.sel(time=slice('1982-01-01', '2016-12-31'))
+    dst = dst.sel(time=~((dst.time.dt.month == 2) & (dst.time.dt.day == 29)))
+    dst['region'] = region_names_fix
+    
+            
+    # create one dataset
+    ds = xr.Dataset()
+    ds['PWT'] = dst.PWT
+    ds['DEM'] = dsd.DEM
+    
+    # some regions are not listed
+    ds.fillna(0)
+    
+    # Setting the general dataset attributes
+    ds.attrs.update(
+                author = 'Laurens Stoop UU/KNMI/TenneT',
+                created = datetime.datetime.today().strftime('%d-%m-%Y'),
+                map_area = 'Europe',
+                region_definition = 'ENTSO-E Zones',
+                data_source = 'TYNDP demand data and population weighted ERA5 temperature [28-02-2022]'
+                )
+            
+    
+    ds.to_netcdf(FOLDER_STORE+'ERA5_LoadModelData_'+scenario_capacity+'.nc', encoding={'time':{'units':'days since 1900-01-01'}})
+    
 
-# make sure to only use similair time period
-dst = dst.sel(time=slice('1982-01-01', '2016-12-31'))
-dst = dst.sel(time=~((dst.time.dt.month == 2) & (dst.time.dt.day == 29)))
-dst['region'] = region_names_fix
 
-        
-# create one dataset
-ds = xr.Dataset()
-ds['PWT'] = dst.PWT
-ds['DEM'] = dsd.DEM
 
-# some regions are not listed
-ds.fillna(0)
+
+
+
+#%%
+# =============================================================================
+# Make some figures
+# =============================================================================
+
 ds = ds.sel(time=slice('2010-01-01', '2016-12-31'),drop=True)
+
+
+
+
 
 plt.close('all')
 fig = plt.figure()
