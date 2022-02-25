@@ -59,79 +59,86 @@ dem_file_loc='/media/DataStager1/Other/ElectricityDemand/TYNDP2020/'
 print('NOTIFY: Initialization is complete, Skynet active')
 #%%
 
-scenario_capacity = 'DE_2030'
 
+for scenario_capacity in TYNDP_scenarios_capacity: 
 
-DEM=[]      
-REGION_NAME=[]   
-
-
-
-for region_name in region_names:
-    print('      : '+region_name+'!')
-#%%
-# =============================================================================
-# Select the relevant Demand data
-# =============================================================================
+    DEM=[]      
+    REGION_NAME=[]   
+    print(scenario_capacity)    
     
-    dem=[]
-    
-   
-    # Append all variables in the timespan    
-    
-    #First exception; luxembourg, add three regions
-    if region_name == 'LU00':
+    for region_name in region_names:
+        print('      : '+region_name+'!')
+    #%%
+    # =============================================================================
+    # Select the relevant Demand data
+    # =============================================================================
         
-        # Open & combine the three regions
-        df1 = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'LUB1', header=10)
-        df2 = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'LUF1', header=10)
-        df3 = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'LUG1', header=10)
-        df = df1.fillna(0) + df2.fillna(0) + df3.fillna(0)
-        for year in np.arange(1982,2017):
-            dem.append(df[year].values)  
-
-    # Danish region without demand
-    elif region_name == 'DKKF':
-        dem.append(np.zeros([8760,35]))
-    
-    # For the Greece regions use correct naming
-    elif region_name =='EL00': 
-        df = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'GR00', header=10)
-        for year in np.arange(1982,2017):
-            dem.append(df[year].values)  
-    elif region_name =='EL03': 
-        df = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'GR03', header=10)
-        for year in np.arange(1982,2017):
-            dem.append(df[year].values)  
-    
-    # all normal cases            
-    else: 
-        # set the demand
-        df = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', region_name, header=10)
-        for year in np.arange(1982,2017):
-            dem.append(df[year].values)  
+        dem=[]
         
-      
+       
+        # Append all variables in the timespan    
         
+        # Attempt for base cases
+        try:
+            df = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', region_name, header=10)
+            for year in np.arange(1982,2017):
+                    dem.append(df[year].values)  
+                    
+        # In exceptional cases we try something else
+        except ValueError:
+            
+            #First exception; luxembourg, add three regions
+            if region_name == 'LU00':
+                
+                print('Luxembourg is special'+region_name)
+                df1 = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'LUB1', header=10)
+                df2 = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'LUF1', header=10)
+                df3 = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'LUG1', header=10)
+                df = df1.fillna(0) + df2.fillna(0) + df3.fillna(0)
+                for year in np.arange(1982,2017):
+                    dem.append(df[year].values)  
+                
+            # For the Greece regions use correct naming
+            elif region_name =='EL00': 
+                print('Greece has incorrect region code ')
+                df = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'GR00', header=10)
+                for year in np.arange(1982,2017):
+                    dem.append(df[year].values)  
+            elif region_name =='EL03': 
+                print('Greece has incorrect region code ')
+                df = pd.read_excel(dem_file_loc+'Demand_TimeSeries_'+scenario_capacity+'.xlsx', 'GR03', header=10)
+                for year in np.arange(1982,2017):
+                    dem.append(df[year].values)  
+            else: 
+                print('Tab not found in main document '+region_name)
+                dem.append(np.zeros([8760,35]))
+            
+            
+            
+          
+            
+            
+        DEM.append(np.array(dem).flatten())
         
-    DEM.append(np.array(dem).flatten())
+        REGION_NAME.append(region_name)
     
-    REGION_NAME.append(region_name)
-
-#%%
-# =============================================================================
-# Create a time index that is correct (no leap-days)
-# =============================================================================
-
-# now create dataframe for the data
-dftime = pd.DataFrame(index=pd.date_range("19820101","20161231T23", freq='H'))
-              
-# remove leapdays
-dftime = dftime[~((dftime.index.month == 2) & (dftime.index.day == 29))]              
-              
-
-#%%
-   
-# out of the region loop we create new arrays with the info
-ds_save = xr.Dataset()
-ds_save['DEM']  = xr.DataArray(DEM, coords=[REGION_NAME, dftime.to_xarray().index], dims=["region", "time"])
+    #%%
+    # =============================================================================
+    # Create a time index that is correct (no leap-days)
+    # =============================================================================
+    
+    # now create dataframe for the data
+    dftime = pd.DataFrame(index=pd.date_range("19820101","20161231T23", freq='H'))
+                  
+    # remove leapdays
+    dftime = dftime[~((dftime.index.month == 2) & (dftime.index.day == 29))]              
+                  
+    
+    #%%
+       
+    # out of the region loop we create new arrays with the info
+    ds_save = xr.Dataset()
+    ds_save['DEM']  = xr.DataArray(DEM, coords=[REGION_NAME, dftime.to_xarray().index], dims=["region", "time"])
+    
+    ds_save.to_netcdf(FOLDER_STORE+'ERA5_DEM_'+scenario_capacity+'.nc', encoding={'time':{'units':'days since 1900-01-01'}})
+    
