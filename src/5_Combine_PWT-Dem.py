@@ -68,7 +68,7 @@ print('NOTIFY: Initialization is complete, Skynet active')
 # Open the files
 # =============================================================================
 
-scenario_capacity2 = ['NT_2030']
+scenario_capacity2 = ['DE_2030']
 region_name = 'FR00'
 
 # for scenario_capacity in TYNDP_scenarios_capacity:
@@ -188,4 +188,4 @@ plt.ylabel('Estimated load [MW]')
 plt.title('Time slice 2010-2016')
 plt.tight_layout()
 # plt.ioff()
-# plt.savefig('/home/stoop/Documents/Project/EnergyVariables-EV/results/figures/DemandPWT/DemPwT_'+scenario_capacity+'_'+region_name+'_hour.png')
+plt.savefig('/home/stoop/Documents/Project/EnergyVariables-EV/results/figures/DemandPWT/DemPwT_'+scenario_capacity+'_'+region_name+'_hour.png')
