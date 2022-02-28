@@ -112,7 +112,7 @@ x0 = [
       ]
 
 # The fitting procedure
-fitvalues = lsq(LSTRmodelResidual, x0, loss='soft_l1', f_scale=0.00001, args=(dsr.PWT, dsr.DEM))
+fitvalues = lsq(LSTRmodelResidual, x0, loss='cauchy', f_scale=0.1, args=(dsr.PWT, dsr.DEM))
 
 
 

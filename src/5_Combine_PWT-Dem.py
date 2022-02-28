@@ -49,16 +49,18 @@ region_names = [
 
 
 
-region_names_fix = ['ITSI', 'LB00', 'PL00', 'LT00', 'LU00', 'BG00', 'NON1', 'CZ00', 'SK00',
-       'CH00', 'SY00', 'FR15', 'RS00', 'NOS0', 'IE00', 'DE00', 'AT00', 'MD00',
-       'ES00', 'AL00', 'RO00', 'ME00', 'HR00', 'DKE1', 'LV00', 'NL00', 'TR00',
-       'MA00', 'EL00', 'EL03', 'TN00', 'EG00', 'UA01', 'UA02', 'BE00', 'MK00', # change GR to EL
-       'ITN1', 'PT00', 'DKW1', 'UK00', 'BA00', 'SI00', 'DZ00', 'IL00', 'CY00',
-       'UKNI', 'NOM1', 'FI00', 'LY00', 'EE00', 'SE01', 'FR00', 'SE02', 'SE03',
-       'SE04', 'HU00', 'ITSA', 'ITCA', 'ITCN', 'ITCS', 'ITS1']
+region_names_fix = ['MT00', 'ITSI', 'LB00', 'PL00', 'LT00', 'LU00', 'BG00', 'NON1', 'CZ00',
+       'SK00', 'CH00', 'SY00', 'FR15', 'RS00', 'NOS0', 'IE00', 'DE00', 'AT00',
+       'MD00', 'ES00', 'AL00', 'RO00', 'ME00', 'HR00', 'DKE1', 'LV00', 'NL00',
+       'TR00', 'MA00', 'EL00', 'EL03', 'TN00', 'EG00', 'UA01', 'UA02', 'BE00', # Changed GR to EL
+       'MK00', 'ITN1', 'PT00', 'DKW1', 'UK00', 'BA00', 'SI00', 'DZ00', 'IL00',
+       'CY00', 'UKNI', 'NOM1', 'FI00', 'LY00', 'EE00', 'SE01', 'FR00', 'SE02',
+       'SE03', 'SE04', 'HU00', 'ITSA', 'ITCA', 'ITCN', 'ITCS', 'ITS1']
 
 # Read NetCDF
 FOLDER_STORE = '/media/DataStager2/ERA5_LoadModel/'
+FOLDER_PWT = '/media/DataStager2/ERA5_PWT/'
+
 
 print('NOTIFY: Initialization is complete, Skynet active')
 #%%
@@ -66,13 +68,14 @@ print('NOTIFY: Initialization is complete, Skynet active')
 # Open the files
 # =============================================================================
 
-scenario_capacity = 'DE_2030'
-region_name = 'EL00'
+scenario_capacity2 = ['NT_2030']
+region_name = 'FR00'
 
-for scenario_capacity in TYNDP_scenarios_capacity: 
+# for scenario_capacity in TYNDP_scenarios_capacity:
+for scenario_capacity in scenario_capacity2:
     # open data
     dsd = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_'+scenario_capacity+'.nc')
-    dst = xr.open_mfdataset(FOLDER_STORE+'ERA5_PWT_*.nc' )
+    dst = xr.open_mfdataset(FOLDER_PWT+'ERA5_PWT_*.nc' )
     
     # make sure to only use similair time period
     dst = dst.sel(time=slice('1982-01-01', '2016-12-31'))
@@ -98,7 +101,7 @@ for scenario_capacity in TYNDP_scenarios_capacity:
                 )
             
     
-    ds.to_netcdf(FOLDER_STORE+'ERA5_LoadModelData_'+scenario_capacity+'.nc', encoding={'time':{'units':'days since 1900-01-01'}})
+    # ds.to_netcdf(FOLDER_STORE+'ERA5_LoadModelData_'+scenario_capacity+'.nc', encoding={'time':{'units':'days since 1900-01-01'}})
     
 
 
@@ -129,7 +132,7 @@ plt.tight_layout()
         
 #%%
 # =============================================================================
-# Filtered view
+# Filtered view day of week
 # =============================================================================
 
 
@@ -155,3 +158,34 @@ plt.title('Time slice 2010-2016')
 plt.tight_layout()
 # plt.ioff()
 # plt.savefig('/home/stoop/Documents/Project/EnergyVariables-EV/results/figures/DemandPWT/DemPwT_'+scenario_capacity+'_'+region_name+'_dow.png')
+
+#%%
+# =============================================================================
+# Filtered view; hour of day
+# =============================================================================
+
+ds1 = ds.where(ds['time.hour'] == 0, drop=True)
+ds2 = ds.where(ds['time.hour'] == 3, drop=True)
+ds3 = ds.where(ds['time.hour'] == 6, drop=True)
+ds4 = ds.where(ds['time.hour'] == 9, drop=True)
+ds5 = ds.where(ds['time.hour'] == 12, drop=True)
+ds6 = ds.where(ds['time.hour'] == 15, drop=True)
+ds7 = ds.where(ds['time.hour'] == 18, drop=True)
+ds8 = ds.where(ds['time.hour'] == 21, drop=True)
+
+
+fig = plt.figure()
+plt.scatter(ds1.PWT.sel(region=region_name),ds1.DEM.sel(region=region_name), s=0.5, c='darkblue')
+plt.scatter(ds8.PWT.sel(region=region_name),ds8.DEM.sel(region=region_name), s=0.5, c='darkblue')
+plt.scatter(ds2.PWT.sel(region=region_name),ds2.DEM.sel(region=region_name), s=0.5, c='blue')
+plt.scatter(ds7.PWT.sel(region=region_name),ds7.DEM.sel(region=region_name), s=0.5, c='blue')
+plt.scatter(ds3.PWT.sel(region=region_name),ds3.DEM.sel(region=region_name), s=0.5, c='green')
+plt.scatter(ds6.PWT.sel(region=region_name),ds6.DEM.sel(region=region_name), s=0.5, c='green')
+plt.scatter(ds4.PWT.sel(region=region_name),ds4.DEM.sel(region=region_name), s=0.5, c='red')
+plt.scatter(ds5.PWT.sel(region=region_name),ds5.DEM.sel(region=region_name), s=0.5, c='red')
+plt.xlabel('Population weighted temperature [degC]')
+plt.ylabel('Estimated load [MW]')
+plt.title('Time slice 2010-2016')
+plt.tight_layout()
+# plt.ioff()
+# plt.savefig('/home/stoop/Documents/Project/EnergyVariables-EV/results/figures/DemandPWT/DemPwT_'+scenario_capacity+'_'+region_name+'_hour.png')
