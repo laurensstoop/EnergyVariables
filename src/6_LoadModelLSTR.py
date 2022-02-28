@@ -108,7 +108,7 @@ x0 = [
       8000.,    # Zero crossing right branch
       1000.,  # slope right branch
       1.,    # Gamma factor (unkown, guess = 1)
-      15.0  # Inflection point from literature (J. Moral-Carcedo, J. Vicens-Otero / Energy Economics 27 (2005) 477–494)
+      15.4  # Inflection point from literature (J. Moral-Carcedo, J. Vicens-Otero / Energy Economics 27 (2005) 477–494)
       ]
 
 # The fitting procedure
@@ -134,7 +134,29 @@ r = stats.linregress(dsr.DEM,dsr.lstrDEM)
 # The RMSE value
 rmse = np.sqrt(((dsr.DEM - dsr.lstrDEM) ** 2).mean())
 
-fig = plt.figure()
+plt.figure(figsize=(8,8))
+ax = plt.axes()
 plt.scatter(dsr.DEM, dsr.lstrDEM, s=0.3)
-plt.title('R '+str(r.rvalue))
+plt.title('Applied for FR00, DE-2030; R='+str(r.rvalue.round(3))+', RMSE='+str(rmse.values.round(2)))
+plt.xlabel('Measured demand [MWh]')
+plt.ylabel('LSTR modelled demand [MWh]')
+plt.ylim(2e4, 12e4)
+plt.xlim(2e4, 12e4)
+plt.tight_layout()
+# plt.ioff()
+plt.savefig('/home/stoop/Documents/Project/EnergyVariables-EV/results/figures/LSTRmodel/LSTRmodel_'+scenario_capacity+'_'+region_name+'.png')
+     
+plt.figure(figsize=(8,8))
+ax = plt.axes()
+dsr.lstrDEM.plot(ax=ax)
+dsr.DEM.plot(ax=ax)
+plt.title('Applied for FR00, DE-2030; R='+str(r.rvalue.round(3))+', RMSE='+str(rmse.values.round(2)))
+# plt.xlabel('Measured demand [MWh]')
+# plt.ylabel('LSTR modelled demand [MWh]')
+# plt.ylim(2e4, 12e4)
+# plt.xlim('2010-01-01', '2010-06-01')
+plt.tight_layout()
+# plt.ioff()
+plt.savefig('/home/stoop/Documents/Project/EnergyVariables-EV/results/figures/LSTRmodel/OutputComp_'+scenario_capacity+'_'+region_name+'.png')
+     
 
