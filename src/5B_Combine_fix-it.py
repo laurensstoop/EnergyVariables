@@ -20,33 +20,6 @@ import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
 
-
-# Versions of the 
-TYNDP_scenarios_capacity = np.array([
-            'DE_2030', 
-            'DE_2040',
-            'GA_2030', 
-            'GA_2040', 
-            'NT_2025', 
-            'NT_2030', 
-            'NT_2040'
-        ])
-
-
-region_names = [
-    'AL00','AT00','BA00','BE00','BG00',
-    'CH00','CY00','CZ00','DE00','DKE1',
-    'DKKF','DKW1','EE00','EL00','EL03',
-    'ES00','FI00','FR00','FR15','HR00',
-    'HU00','IE00','ITCN','ITCS','ITN1',
-    'ITS1','ITSA','ITSI','LT00','LU00',
-    'LV00','ME00','MK00','MT00','NL00',
-    'NOM1','NON1','NOS0','PL00','PT00',
-    'RO00','RS00','SE01','SE02','SE03',
-    'SE04','SI00','SK00','TR00','UA01',
-    'UK00','UKNI']
-
-
 # Read NetCDF
 FOLDER_STORE = '/media/DataStager2/ERA5_LoadModel/'
 FOLDER_EV = '/media/DataStager2/ERA5_EV/'
@@ -58,19 +31,22 @@ print('NOTIFY: Initialization is complete, Skynet active')
 # =============================================================================
 
 # open the dataset
-dD3 = xr.open_dataset(FOLDER_STORE+'ERA5_LoadModelData_DE_2030.nc').DEM
-dD4 = xr.open_dataset(FOLDER_STORE+'ERA5_LoadModelData_DE_2040.nc').DEM
-dG3 = xr.open_dataset(FOLDER_STORE+'ERA5_LoadModelData_GA_2030.nc').DEM
-dG4 = xr.open_dataset(FOLDER_STORE+'ERA5_LoadModelData_GA_2040.nc').DEM
-dN2 = xr.open_dataset(FOLDER_STORE+'ERA5_LoadModelData_NT_2025.nc').DEM
-dN3 = xr.open_dataset(FOLDER_STORE+'ERA5_LoadModelData_NT_2030.nc').DEM
-dN4 = xr.open_dataset(FOLDER_STORE+'ERA5_LoadModelData_NT_2040.nc').DEM
+dD3 = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_DE_2030.nc').DEM
+dD4 = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_DE_2040.nc').DEM
+dG3 = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_GA_2030.nc').DEM
+dG4 = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_GA_2040.nc').DEM
+dN2 = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_NT_2025.nc').DEM
+dN3 = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_NT_2030.nc').DEM
+dN4 = xr.open_dataset(FOLDER_STORE+'ERA5_DEM_NT_2040.nc').DEM
 
 dG4m = dG4.mean()
 dG3m = dG3.mean()
 dD3m = dD3.mean()
 dD4m = dD4.mean()
 
+
+print('NOTIFY: Data loaded, working on fixes')
+#%%
 # =============================================================================
 # fix the information when one set per scenario is missing
 # =============================================================================
@@ -166,10 +142,31 @@ TMP=dN4.sel(region='UA01')  / dN4.mean() * dD4m
 dD4 = xr.where(dD4.region == 'UA01', TMP, dD4)
 
 
+
+# =============================================================================
+# Fixing Hungary
+# =============================================================================
+#UA01 in DE_2040
+TMP=dD4.sel(region='HU00')  / 100.
+dD4 = xr.where(dD4.region == 'HU00', TMP, dD4)
+
+
+print('NOTIFY: Fixes complete, now cleaning the files')
 #%%
 # =============================================================================
 # Cleaning time
 # =============================================================================
+
+
+
+dD3 = dD3.sel(time=slice('1982-01-01', '2010-12-31'))
+dD4 = dD4.sel(time=slice('1982-01-01', '2010-12-31'))
+dG3 = dG3.sel(time=slice('1982-01-01', '2010-12-31'))
+dG4 = dG4.sel(time=slice('1982-01-01', '2010-12-31'))
+dN2 = dN2.sel(time=slice('1982-01-01', '2010-12-31'))
+dN3 = dN3.sel(time=slice('1982-01-01', '2010-12-31'))
+dN4 = dN4.sel(time=slice('1982-01-01', '2010-12-31'))
+
 dD3 = dD3.dropna(dim='region')
 dD4 = dD4.dropna(dim='region')
 dG3 = dG3.dropna(dim='region')
@@ -179,7 +176,7 @@ dN3 = dN3.dropna(dim='region')
 dN4 = dN4.dropna(dim='region')
 
 
-
+print('NOTIFY: Saving initiated')
 #%%
 # =============================================================================
 # Data saving
