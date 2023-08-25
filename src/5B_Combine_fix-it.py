@@ -51,104 +51,104 @@ print('NOTIFY: Data loaded, working on fixes')
 # fix the information when one set per scenario is missing
 # =============================================================================
 
-#TR00 in GA_2030
-TMP=dG4.sel(region='TR00')/dG4m*dG3.mean()
-dG3 = xr.where(dG3.region == 'TR00', TMP, dG3)
+# #TR00 in GA_2030
+# TMP=dG4.sel(region='TR00')/dG4m*dG3.mean()
+# dG3 = xr.where(dG3.region == 'TR00', TMP, dG3)
 
-#AL00 in DE_2040
-TMP=dD3.sel(region='AL00')/dD3m*dD4m
-dD4 = xr.where(dD4.region == 'AL00', TMP, dD4)
-
-
-#CH00 in GA_2030
-TMP=dG4.sel(region='CH00')/dG4m*dG3.mean()
-dG3 = xr.where(dG3.region == 'CH00', TMP, dG3)
-
-#CH00 in DE_2040
-TMP=dD3.sel(region='CH00')/dD3m*dD4m
-dD4 = xr.where(dD4.region == 'CH00', TMP, dD4)
+# #AL00 in DE_2040
+# TMP=dD3.sel(region='AL00')/dD3m*dD4m
+# dD4 = xr.where(dD4.region == 'AL00', TMP, dD4)
 
 
-#FR15 in DE_2040
-TMP=dD3.sel(region='FR15')/dD3m*dD4m
-dD4 = xr.where(dD4.region == 'FR15', TMP, dD4)
+# #CH00 in GA_2030
+# TMP=dG4.sel(region='CH00')/dG4m*dG3.mean()
+# dG3 = xr.where(dG3.region == 'CH00', TMP, dG3)
 
-#PL00 in DE_2040
-TMP=dD3.sel(region='PL00')/dD3m*dD4m
-dD4 = xr.where(dD4.region == 'PL00', TMP, dD4)
-
-# =============================================================================
-# Fix the information for double missing
-# =============================================================================
-
-#AL00 in GA_2030
-TMP=dD3.sel(region='AL00')  / dD3m *dG3m
-dG3 = xr.where(dG3.region == 'AL00', TMP, dG3)
-
-#AL00 in GA_2040
-TMP=dD4.sel(region='AL00')  / dD4m * dG4m
-dG4 = xr.where(dG4.region == 'AL00', TMP, dG4)
-
-#FR00 in GA_2030
-TMP=dD3.sel(region='FR00')  / dD3m *dG3m
-dG3 = xr.where(dG3.region == 'FR00', TMP, dG3)
-
-#FR00 in GA_2040
-TMP=dD4.sel(region='FR00')  / dD4m * dG4m
-dG4 = xr.where(dG4.region == 'FR00', TMP, dG4)
-
-#FR00 in GA_2030
-TMP=dD3.sel(region='FR15')  / dD3m *dG3m
-dG3 = xr.where(dG3.region == 'FR15', TMP, dG3)
-
-#FR00 in GA_2040
-TMP=dD4.sel(region='FR15')  / dD4m * dG4m
-dG4 = xr.where(dG4.region == 'FR15', TMP, dG4)
-
-#PL00 in GA_2030
-TMP=dD3.sel(region='PL00')  / dD3m *dG3m
-dG3 = xr.where(dG3.region == 'PL00', TMP, dG3)
-
-#PL00 in GA_2040
-TMP=dD4.sel(region='PL00')  / dD4m * dG4m
-dG4 = xr.where(dG4.region == 'PL00', TMP, dG4)
-
-#TR00 in DE_2030
-TMP=dG3.sel(region='TR00')  /dG3m * dD3m
-dD3 = xr.where(dD3.region == 'TR00', TMP, dD3)
-
-#TR00 in DE_2040
-TMP=dG4.sel(region='TR00')  / dG4m * dD4m
-dD4 = xr.where(dD4.region == 'TR00', TMP, dD4)
+# #CH00 in DE_2040
+# TMP=dD3.sel(region='CH00')/dD3m*dD4m
+# dD4 = xr.where(dD4.region == 'CH00', TMP, dD4)
 
 
-# =============================================================================
-# And then there is ukrain
-# =============================================================================
-#UA01 in GA_2030
-TMP=dN3.sel(region='UA01')  / dN3.mean() *dG3m
-dG3 = xr.where(dG3.region == 'UA01', TMP, dG3)
+# #FR15 in DE_2040
+# TMP=dD3.sel(region='FR15')/dD3m*dD4m
+# dD4 = xr.where(dD4.region == 'FR15', TMP, dD4)
 
-#UA01 in GA_2040
-TMP=dN4.sel(region='UA01')  / dN4.mean() * dG4m
-dG4 = xr.where(dG4.region == 'UA01', TMP, dG4)
+# #PL00 in DE_2040
+# TMP=dD3.sel(region='PL00')/dD3m*dD4m
+# dD4 = xr.where(dD4.region == 'PL00', TMP, dD4)
 
-#UA01 in DE_2030
-TMP=dN3.sel(region='UA01')  /dN3.mean() * dD3m
-dD3 = xr.where(dD3.region == 'UA01', TMP, dD3)
+# # =============================================================================
+# # Fix the information for double missing
+# # =============================================================================
 
-#UA01 in DE_2040
-TMP=dN4.sel(region='UA01')  / dN4.mean() * dD4m
-dD4 = xr.where(dD4.region == 'UA01', TMP, dD4)
+# #AL00 in GA_2030
+# TMP=dD3.sel(region='AL00')  / dD3m *dG3m
+# dG3 = xr.where(dG3.region == 'AL00', TMP, dG3)
+
+# #AL00 in GA_2040
+# TMP=dD4.sel(region='AL00')  / dD4m * dG4m
+# dG4 = xr.where(dG4.region == 'AL00', TMP, dG4)
+
+# #FR00 in GA_2030
+# TMP=dD3.sel(region='FR00')  / dD3m *dG3m
+# dG3 = xr.where(dG3.region == 'FR00', TMP, dG3)
+
+# #FR00 in GA_2040
+# TMP=dD4.sel(region='FR00')  / dD4m * dG4m
+# dG4 = xr.where(dG4.region == 'FR00', TMP, dG4)
+
+# #FR00 in GA_2030
+# TMP=dD3.sel(region='FR15')  / dD3m *dG3m
+# dG3 = xr.where(dG3.region == 'FR15', TMP, dG3)
+
+# #FR00 in GA_2040
+# TMP=dD4.sel(region='FR15')  / dD4m * dG4m
+# dG4 = xr.where(dG4.region == 'FR15', TMP, dG4)
+
+# #PL00 in GA_2030
+# TMP=dD3.sel(region='PL00')  / dD3m *dG3m
+# dG3 = xr.where(dG3.region == 'PL00', TMP, dG3)
+
+# #PL00 in GA_2040
+# TMP=dD4.sel(region='PL00')  / dD4m * dG4m
+# dG4 = xr.where(dG4.region == 'PL00', TMP, dG4)
+
+# #TR00 in DE_2030
+# TMP=dG3.sel(region='TR00')  /dG3m * dD3m
+# dD3 = xr.where(dD3.region == 'TR00', TMP, dD3)
+
+# #TR00 in DE_2040
+# TMP=dG4.sel(region='TR00')  / dG4m * dD4m
+# dD4 = xr.where(dD4.region == 'TR00', TMP, dD4)
+
+
+# # =============================================================================
+# # And then there is ukrain
+# # =============================================================================
+# #UA01 in GA_2030
+# TMP=dN3.sel(region='UA01')  / dN3.mean() *dG3m
+# dG3 = xr.where(dG3.region == 'UA01', TMP, dG3)
+
+# #UA01 in GA_2040
+# TMP=dN4.sel(region='UA01')  / dN4.mean() * dG4m
+# dG4 = xr.where(dG4.region == 'UA01', TMP, dG4)
+
+# #UA01 in DE_2030
+# TMP=dN3.sel(region='UA01')  /dN3.mean() * dD3m
+# dD3 = xr.where(dD3.region == 'UA01', TMP, dD3)
+
+# #UA01 in DE_2040
+# TMP=dN4.sel(region='UA01')  / dN4.mean() * dD4m
+# dD4 = xr.where(dD4.region == 'UA01', TMP, dD4)
 
 
 
-# =============================================================================
-# Fixing Hungary
-# =============================================================================
-#UA01 in DE_2040
-TMP=dD4.sel(region='HU00')  / 100.
-dD4 = xr.where(dD4.region == 'HU00', TMP, dD4)
+# # =============================================================================
+# # Fixing Hungary
+# # =============================================================================
+# #UA01 in DE_2040
+# TMP=dD4.sel(region='HU00')  / 100.
+# dD4 = xr.where(dD4.region == 'HU00', TMP, dD4)
 
 
 print('NOTIFY: Fixes complete, now cleaning the files')

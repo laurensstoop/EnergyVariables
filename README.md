@@ -1,6 +1,6 @@
 # CapacityFactor-CF
 
-Version 0.1.0
+Version 0.2.0
 
 This Git contains a set of scripts intended for energy variables from given distributions and capacity factor datasets. 
 
@@ -13,15 +13,13 @@ This Git contains a set of scripts intended for energy variables from given dist
 ├── CITATION.md
 ├── LICENSE.md
 ├── README.md
-├── requirements.txt
-├── config             <- Configuration files (HW)
-├── docs               <- Documentation notebook for users (HW)
-│   ├── manuscript     <- Manuscript source, e.g., LaTeX, Markdown, etc. (HW)
-│   └── reports        <- Other project reports and notebooks (e.g. Jupyter, .Rmd) (HW)
+├── config             <- Configuration files (Not used)
+├── docs               <- Documentation notebook for users (Not used)
+│   ├── manuscript     <- Manuscript source, e.g., LaTeX, Markdown, etc. (Not used)
+│   └── reports        <- Other project reports and notebooks (e.g. Jupyter, .Rmd) (Not used)
 ├── results
-│   ├── figures        <- Figures for the manuscript or reports (PG)
-│   └── output         <- Other output for the manuscript or reports (PG)
-└── src                <- Source code for this project (HW)
+│   └── output         <- Output data used within the studies
+└── src                <- Source code for this project
 
 ```
 

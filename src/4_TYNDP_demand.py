@@ -23,10 +23,10 @@ import datetime
 
 # Versions of the 
 TYNDP_scenarios_capacity = np.array([
-            'DE_2030', 
-            'DE_2040',
-            'GA_2030', 
-            'GA_2040', 
+            # 'DE_2030', 
+            # 'DE_2040',
+            # 'GA_2030', 
+            # 'GA_2040', 
             'NT_2025', 
             'NT_2030', 
             'NT_2040'
@@ -39,8 +39,7 @@ region_names = [
     'DKKF','DKW1','EE00','EL00','EL03',
     'ES00','FI00','FR00','FR15','HR00',
     'HU00','IE00','ITCN','ITCS','ITN1',
-    'ITS1','ITSA','ITSI','LT00',
-    'LU00',
+    'ITS1','ITSA','ITSI','LT00','LU00',
     'LV00','ME00','MK00','MT00','NL00',
     'NOM1','NON1','NOS0','PL00','PT00',
     'RO00','RS00','SE01','SE02','SE03',
@@ -150,7 +149,7 @@ for scenario_capacity in TYNDP_scenarios_capacity:
                 created = datetime.datetime.today().strftime('%d-%m-%Y'),
                 map_area = 'Europe',
                 region_definition = 'ENTSO-E Zones',
-                data_source = 'TYNDP demand data time series cleaned & unified [28-02-2022]'
+                data_source = 'TYNDP demand data time series cleaned & unified, version 2 [14-11-2022]'
                 )
             
     
